@@ -49,6 +49,25 @@ func (f File) Get(section, key string) (value string, ok bool) {
 	return
 }
 
+// Case insensitive Looks up a value for a key in a section and returns that value, along with a boolean result similar to a map lookup.
+func (f File) Geti(section, key string) (value string, ok bool) {
+        var thesection string
+
+        for name, _ := range f {
+                if strings.EqualFold(name, section) {
+                        thesection = name
+                }
+        }
+
+        for akey, avalue := range f[thesection] {
+                if strings.EqualFold(akey, key) {
+                        value = avalue
+                }
+        }
+
+        return value, (len(value) != 0)
+}
+
 // Loads INI data from a reader and stores the data in the File.
 func (f File) Load(in io.Reader) (err error) {
 	bufin, ok := in.(*bufio.Reader)
